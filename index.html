@@ -5,10 +5,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Taller TypeScript</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" href="data:,">
     <script type="module" src="./scripts/main.js"></script>
 </head>
 <body>
-    <h1>TV Series</h1>
+    <div class="container mt-5">
+        <h1 class="text-center">TV Series</h1>
+        <div class="row">
+            <div class="col-md-8">
+                <div id="seriesTable"></div>
+                <p class="text-center font-weight-bold" id="seasonsAverage"></p>
+            </div>
+            <div class="col-md-4">
+                <div id="seriesDetail"></div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

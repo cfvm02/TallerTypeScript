@@ -1,20 +1,66 @@
 import { series } from "./data.js";
 function createSeriesTable(series) {
-    var tableContent = "\n    <thead>\n        <tr>\n            <th>#</th>\n            <th>Name</th>\n            <th>Channel</th>\n            <th>Seasons</th>\n        </tr>\n    </thead>\n    <tbody>\n    ";
-    series.forEach(function (serie) {
-        tableContent += "\n        <tr>\n            <td>".concat(serie.id, "</td>\n            <td><a href=\"").concat(serie.link, "\" target=\"_blank\">").concat(serie.name, "</a></td>\n            <td>").concat(serie.channel, "</td>\n            <td>").concat(serie.seasons, "</td>\n        </tr>\n        ");
+    let tableContent = `
+    <table class="table table-striped table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Channel</th>
+                <th>Seasons</th>
+            </tr>
+        </thead>
+        <tbody>
+    `;
+    series.forEach((serie) => {
+        tableContent += `
+        <tr>
+            <td>${serie.id}</td>
+            <td><a href="#" class="serie-link" data-id="${serie.id}">${serie.name}</a></td>
+            <td>${serie.channel}</td>
+            <td>${serie.seasons}</td>
+        </tr>
+        `;
     });
-    tableContent += "</tbody>";
+    tableContent += "</tbody></table>";
     return tableContent;
 }
 function calculateSeasonsAverage(series) {
-    var totalSeasons = series.reduce(function (sum, serie) { return sum + serie.seasons; }, 0);
+    const totalSeasons = series.reduce((sum, serie) => sum + serie.seasons, 0);
     return totalSeasons / series.length;
 }
-var seriesTable = document.createElement('table');
-seriesTable.innerHTML = createSeriesTable(series);
-document.body.appendChild(seriesTable);
-var averageSeasons = calculateSeasonsAverage(series);
-var averageElement = document.createElement('p');
-averageElement.textContent = "Seasons average: ".concat(averageSeasons);
-document.body.appendChild(averageElement);
+function displaySeriesDetails(serie) {
+    const detailContainer = document.getElementById('seriesDetail');
+    if (detailContainer) {
+        detailContainer.innerHTML = `
+        <div class="card">
+            <img src="${serie.image}" class="card-img-top" alt="${serie.name}">
+            <div class="card-body">
+                <h5 class="card-title">${serie.name}</h5>
+                <p class="card-text">${serie.description}</p>
+                <a href="${serie.link}" target="_blank" class="btn btn-primary">Learn more</a>
+            </div>
+        </div>
+        `;
+    }
+}
+const seriesTableContainer = document.getElementById('seriesTable');
+if (seriesTableContainer) {
+    seriesTableContainer.innerHTML = createSeriesTable(series);
+}
+const averageSeasons = calculateSeasonsAverage(series);
+const averageElement = document.getElementById('seasonsAverage');
+if (averageElement) {
+    averageElement.textContent = `Seasons average: ${averageSeasons}`;
+}
+//listeners
+document.querySelectorAll('.serie-link').forEach(link => {
+    link.addEventListener('click', (event) => {
+        event.preventDefault();
+        const id = event.target.getAttribute('data-id');
+        const serie = series.find((s) => s.id === Number(id));
+        if (serie) {
+            displaySeriesDetails(serie);
+        }
+    });
+});
